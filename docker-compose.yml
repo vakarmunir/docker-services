@@ -1,5 +1,6 @@
 version: '2'
 services:
+  #DB server (MySQL)
   db:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
@@ -7,8 +8,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports: 
-      - 3306:3306
-  #application + webserver
+      - ${DB_PORT_HOST}:${DB_PORT}
+  #Application + Webserver
   app:
     depends_on:
       - db
@@ -19,4 +20,8 @@ services:
     volumes:
       - ./testapp.com:/var/www/testapp.com
     ports:
-      - 80:8080
+      - ${APP_PORT_HOST}:${APP_PORT}
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=${DB_PORT}
