@@ -1,0 +1,22 @@
+version: '2'
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports: 
+      - 3306:3306
+  #application + webserver
+  app:
+    depends_on:
+      - db
+    build:
+      context: ./
+      dockerfile: app.dockerfile
+    working_dir: /var/www
+    volumes:
+      - ./testapp.com:/var/www/testapp.com
+    ports:
+      - 80:8080
