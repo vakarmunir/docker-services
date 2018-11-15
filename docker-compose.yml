@@ -4,7 +4,7 @@ services:
   db:
     image: mysql
     volumes: 
-      - ./volumns/mysql-data:/var/lib/mysql:rw
+      - mysql-data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
@@ -16,21 +16,16 @@ services:
     depends_on:
       - db
     build:
-      context: ./
+      context: ./testapp-service
       dockerfile: app.dockerfile
     working_dir: /var/www
     volumes:
-      - ./testapp.com:/var/www/testapp.com
+      - ./testapp-service/testapp.com:/var/www/testapp.com
     ports:
       - ${APP_PORT_HOST}:${APP_PORT}
     environment:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_PORT=${DB_PORT}
-# volumes: 
-#   mysql-data:
-#     driver: local
-#     driver_opts: 
-#       type: none
-#       o: bind
-#       device: ./volumns/mysql-data
+volumes: 
+  mysql-data:
